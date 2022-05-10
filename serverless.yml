@@ -1,0 +1,46 @@
+service: ingestion-service-v0
+
+frameworkVersion: '2'
+# variablesResolutionMode: 20210326
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "lambda:InvokeFunction"
+        - "lambda:InvokeAsync"
+      Resource: "*"
+  stage: ${opt:stage, 'dev'}
+  region: us-west-2
+  environment:
+      ENV_PREFIX: ${self:service.name}-${self:provider.stage}
+      REGION: ${self:provider.region}
+      X_GRAPH_PREFIX: base-service-zmrTest
+      ACCOUNT_ID: 407624315626
+      TENANT_ID: sudstaining
+      USER_ID: zamir
+
+functions:
+  onboardScannedItems:
+    handler: lambdas/onboardScannedItems.handle
+  querySensorProfiles:
+    handler: lambdas/querySensorProfiles.handle
+# resources:
+#   Resources:
+# This isn't setting up the lambda trigger properly, look into roles
+#     IoTRule:
+#       Type: AWS::IoT::TopicRule
+#       Properties:
+#         RuleName: publish_tags_for_onboard_K213500769
+#         TopicRulePayload: {
+#           "Sql": SELECT tags FROM 'devices/K213500769/tags',
+#           "RuleDisabled": false,
+#           "Actions": [{
+#               "Lambda": {
+#                   "FunctionArn": "${self:provider.environment.ENV_PREFIX}-onboardScannedItems"
+#               }
+#           }]
+#         }

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.1130.0",
+    "node-epc": "^0.1.1"
+  }
+}
